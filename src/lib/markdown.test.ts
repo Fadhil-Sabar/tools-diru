@@ -4,8 +4,8 @@ import { markdownStats, pdfFilename, pdfOptions, prefixSelectedLines, wrapSelect
 
 describe('Markdown to PDF', () => {
   it('counts words and estimates pages', () => {
-    expect(markdownStats('')).toEqual({ words: 0, pages: 1 })
-    expect(markdownStats(Array(501).fill('word').join(' '))).toEqual({ words: 501, pages: 2 })
+    expect(markdownStats('')).toEqual({ words: 0, characters: 0, pages: 1, readingMinutes: 1 })
+    expect(markdownStats(Array(501).fill('word').join(' '))).toEqual({ words: 501, characters: 2504, pages: 2, readingMinutes: 3 })
   })
 
   it('wraps selections and inserts placeholders', () => {

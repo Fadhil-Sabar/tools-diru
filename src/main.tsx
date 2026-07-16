@@ -10,12 +10,12 @@ import JsonFormatter from './routes/json-formatter.tsx'
 import Timestamp from './routes/timestamp.tsx'
 import TextInspector from './routes/text-inspector.tsx'
 import UuidGenerator from './routes/uuid-generator.tsx'
-import MarkdownPdf from './routes/markdown-pdf.tsx'
 import SqlFormatter from './routes/sql-formatter.tsx'
 import JsonCsv from './routes/json-csv.tsx'
 import ColorConverter from './routes/color-converter.tsx'
 import ImageColorPicker from './routes/image-color-picker.tsx'
 import ColorPalette from './routes/color-palette.tsx'
+import MarkdownPdfRoute from './routes/markdown-pdf-lazy.tsx'
 
 import './index.css'
 
@@ -60,7 +60,7 @@ const uuidRoute = createRoute({
 const markdownRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/markdown-pdf',
-  component: MarkdownPdf,
+  component: MarkdownPdfRoute,
 })
 
 const sqlRoute = createRoute({

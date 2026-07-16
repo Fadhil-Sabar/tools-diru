@@ -4,6 +4,8 @@
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/newsreader";
 @import "@fontsource/ibm-plex-mono/400.css";
+@import "katex/dist/katex.min.css";
+@import "highlight.js/styles/github-dark-dimmed.min.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -129,7 +131,7 @@
 .privacy-note strong { display: block; margin-bottom: .15rem; color: var(--ink); font-size: .7rem; }
 .sidebar-scrim { display: none; }
 
-.app-area { min-height: 100svh; margin-left: 16.5rem; }
+.app-area { min-width: 0; min-height: 100svh; margin-left: 16.5rem; }
 .topbar { position: sticky; top: 0; z-index: 20; height: 5rem; padding: 0 clamp(1.25rem, 4vw, 4rem); display: flex; align-items: center; justify-content: space-between; gap: 2rem; border-bottom: 1px solid var(--ink); background: color-mix(in oklch, var(--paper), transparent 5%); }
 .menu-button { display: none; width: 2rem; height: 2rem; place-items: center; border: 0; background: transparent; }
 .menu-button svg { width: 1.15rem; }
@@ -146,7 +148,8 @@
 .theme-toggle:hover { border-color: var(--ink); background: var(--accent); }
 .theme-toggle:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
 .theme-toggle svg { width: .95rem; }
-.app-content { max-width: 1480px; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 4rem) 5rem; }
+.app-content { min-width: 0; max-width: 1480px; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 4rem) 5rem; overflow-x: clip; }
+.route-loading { min-height: 20rem; display: grid; place-items: center; color: var(--muted-ink); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
 
 .eyebrow { margin: 0 0 1rem; color: var(--rust); font-size: .65rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
 h1 { margin: 0; font-family: "Newsreader Variable", serif; font-weight: 430; letter-spacing: -.055em; }
@@ -369,7 +372,7 @@ h1 em { color: var(--rust); font-weight: 350; }
 .uuid-security strong { display: block; color: var(--pine); font-size: .72rem; }
 .uuid-security p { margin: .15rem 0 0; color: color-mix(in oklch, var(--pine), var(--ink) 45%); font-size: .66rem; line-height: 1.45; }
 
-.markdown-workspace { border-top: 1px solid var(--ink); }
+.markdown-workspace { min-width: 0; overflow: hidden; border-top: 1px solid var(--ink); container-type: inline-size; }
 .markdown-document-bar { min-height: 4.75rem; padding: .7rem 1rem; display: grid; grid-template-columns: minmax(12rem, 1fr) auto auto auto; align-items: end; gap: 1rem; border-bottom: 1px solid var(--ink); }
 .markdown-document-bar label > span { display: block; margin-bottom: .35rem; color: var(--muted-ink); font-size: .58rem; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
 .markdown-document-bar input, .markdown-document-bar select { width: 100%; height: 2.2rem; padding: 0 .6rem; border: 1px solid var(--rule); border-radius: 0; outline: 0; background: var(--panel); color: var(--ink); font-size: .72rem; }
@@ -378,6 +381,8 @@ h1 em { color: var(--rust); font-weight: 350; }
 .markdown-stats { height: 2.2rem; display: flex; align-items: center; gap: .75rem; color: var(--muted-ink); font: .62rem "IBM Plex Mono", monospace; }
 .markdown-stats span + span { padding-left: .75rem; border-left: 1px solid var(--rule); }
 .markdown-document-bar > button { height: 2.2rem !important; }
+.markdown-document-actions { display: flex; align-items: center; justify-content: flex-end; gap: .2rem; }
+.markdown-document-actions > button { height: 2.2rem; }
 .spin { animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .markdown-toolbar { min-height: 3.75rem; padding: .55rem 1rem; display: flex; align-items: center; gap: .8rem; border-bottom: 1px solid var(--ink); background: color-mix(in oklch, var(--secondary), transparent 30%); }
@@ -392,7 +397,7 @@ h1 em { color: var(--rust); font-weight: 350; }
 .markdown-view-switch button + button { border-left: 1px solid var(--rule); }
 .markdown-view-switch button.active { background: var(--ink); color: var(--paper); }
 .markdown-view-switch svg { width: .8rem; }
-.markdown-editor-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--ink); }
+.markdown-editor-grid { min-width: 0; display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--ink); }
 .markdown-editor-grid.view-write, .markdown-editor-grid.view-preview { grid-template-columns: 1fr; }
 .view-write .markdown-preview-panel, .view-preview .markdown-editor-panel { display: none; }
 .markdown-editor-panel { min-width: 0; border-right: 1px solid var(--ink); background: var(--panel); }
@@ -405,24 +410,27 @@ h1 em { color: var(--rust); font-weight: 350; }
 .markdown-editor-panel textarea { display: block; width: 100%; height: 52rem; resize: vertical; padding: 1.5rem; border: 0; border-radius: 0; outline: 0; background: transparent; color: var(--ink); font: .76rem/1.75 "IBM Plex Mono", monospace; tab-size: 2; }
 .markdown-editor-panel textarea:focus { box-shadow: inset 0 0 0 2px var(--rust); }
 .markdown-editor-panel textarea::placeholder { color: var(--muted-ink); }
-.paper-stage { height: 52rem; padding: 1.5rem; overflow: auto; background: color-mix(in oklch, var(--secondary), var(--ink) 7%); }
-.pdf-page { width: min(100%, 210mm); min-height: 297mm; margin: 0 auto; padding: clamp(2rem, 5vw, 4.2rem); background: #fffefa; color: #28231f; box-shadow: 0 14px 35px oklch(0.15 0.02 50 / 18%); }
+.markdown-codemirror { height: 52rem; overflow: hidden; }
+.markdown-divider { width: 6px; min-width: 6px; padding: 0; border: 0; border-inline: 1px solid var(--rule); background: var(--secondary); cursor: col-resize; }
+.markdown-divider:hover, .markdown-divider:focus-visible { background: var(--rust); outline: 0; }
+.paper-stage { min-width: 0; height: 52rem; padding: 1.5rem; overflow: auto; background: color-mix(in oklch, var(--secondary), var(--ink) 7%); }
+.pdf-page { box-sizing: border-box; width: min(100%, var(--markdown-page-width, 210mm)); min-height: 297mm; margin: 0 auto; padding: clamp(2rem, 5vw, 4.2rem); overflow-wrap: anywhere; background: #fffefa; color: #28231f; box-shadow: 0 14px 35px oklch(0.15 0.02 50 / 18%); }
 .pdf-page.paper-letter { width: min(100%, 216mm); min-height: 279mm; }
-.markdown-rendered { overflow-wrap: anywhere; font: 1rem/1.65 Georgia, "Times New Roman", serif; }
+.markdown-rendered { overflow-wrap: anywhere; font-family: var(--markdown-body-font, Georgia), Georgia, serif; font-size: var(--markdown-font-size, 12pt); line-height: var(--markdown-line-height, 1.65); }
 .markdown-rendered > :first-child { margin-top: 0; }
 .markdown-rendered > :last-child { margin-bottom: 0; }
-.markdown-rendered h1, .markdown-rendered h2, .markdown-rendered h3, .markdown-rendered h4 { margin: 1.5em 0 .55em; color: #211d19; font-family: Georgia, "Times New Roman", serif; font-weight: 700; line-height: 1.2; page-break-after: avoid; }
+.markdown-rendered h1, .markdown-rendered h2, .markdown-rendered h3, .markdown-rendered h4, .markdown-rendered h5, .markdown-rendered h6 { margin: 1.5em 0 .55em; color: #211d19; font-family: var(--markdown-heading-font, Georgia), Georgia, serif; font-weight: 700; line-height: 1.2; page-break-after: avoid; }
 .markdown-rendered h1 { padding-bottom: .35em; border-bottom: 2px solid #28231f; font-size: 2.2em; letter-spacing: -.035em; }
 .markdown-rendered h2 { font-size: 1.55em; }
 .markdown-rendered h3 { font-size: 1.2em; }
-.markdown-rendered p { margin: 0 0 1em; }
+.markdown-rendered p { margin: 0 0 var(--markdown-paragraph-space, 12px); }
 .markdown-rendered a { color: #9a3d28; text-decoration: underline; text-underline-offset: 2px; }
 .markdown-rendered ul, .markdown-rendered ol { margin: 0 0 1em; padding-left: 1.6em; }
 .markdown-rendered ul { list-style: disc; }
 .markdown-rendered ol { list-style: decimal; }
 .markdown-rendered li { margin: .25em 0; }
 .markdown-rendered blockquote { margin: 1.2em 0; padding: .7em 1em; border-left: 3px solid #a84a32; background: #f5efe7; color: #5d5148; font-style: italic; }
-.markdown-rendered code { padding: .12em .3em; background: #eee8df; color: #863b2b; font: .84em "IBM Plex Mono", monospace; }
+.markdown-rendered code { padding: .12em .3em; background: #eee8df; color: #863b2b; font: .84em var(--markdown-code-font, "IBM Plex Mono"), monospace; }
 .markdown-rendered pre { margin: 1.2em 0; padding: 1em; overflow: auto; border: 1px solid #d8d0c5; background: #f3eee7; page-break-inside: avoid; }
 .markdown-rendered pre code { padding: 0; background: transparent; color: #28231f; }
 .markdown-rendered table { width: 100%; margin: 1.2em 0; border-collapse: collapse; font-size: .9em; page-break-inside: avoid; }
@@ -431,10 +439,80 @@ h1 em { color: var(--rust); font-weight: 350; }
 .markdown-rendered hr { margin: 2em 0; border: 0; border-top: 1px solid #b9afa3; }
 .markdown-rendered img { max-width: 100%; height: auto; page-break-inside: avoid; }
 .markdown-rendered input[type="checkbox"] { margin-right: .45em; accent-color: #9a3d28; }
+.markdown-rendered .task-list-item { list-style: none; }
+.markdown-rendered .contains-task-list { padding-left: 1.1em; }
+.markdown-rendered .math-block { margin: 1.2em 0; overflow-x: auto; text-align: center; }
+.markdown-rendered .hljs { color: #d8d0c5; background: #292521; }
+.markdown-missing-image { display: inline-block; padding: .35em .55em; border: 1px dashed #b76b33; background: #fff2d9; color: #8d4b1f; font-size: .8em; }
+.preview-dark .paper-stage { background: oklch(0.16 0.016 67); }
+.preview-dark .pdf-page { background: #25211e; color: #e9e0d4; }
+.preview-dark .markdown-rendered h1, .preview-dark .markdown-rendered h2, .preview-dark .markdown-rendered h3, .preview-dark .markdown-rendered h4, .preview-dark .markdown-rendered h5, .preview-dark .markdown-rendered h6 { color: #f5ede2; }
+.preview-dark .markdown-rendered h1 { border-color: #e9e0d4; }
+.preview-dark .markdown-rendered blockquote { border-color: #c96b4f; background: #302925; color: #cfc2b4; }
+.preview-dark .markdown-rendered code { background: #38312c; color: #ef9b82; }
+.preview-dark .markdown-rendered pre { border-color: #554a42; background: #302b27; }
+.preview-dark .markdown-rendered pre code { color: #e9e0d4; }
+.preview-dark .markdown-rendered th, .preview-dark .markdown-rendered td { border-color: #554a42; }
+.preview-dark .markdown-rendered th { background: #38312c; }
+.markdown-draft-banner { min-height: 4rem; padding: .7rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--ink); background: var(--rust-soft); color: var(--rust); }
+.markdown-draft-banner strong, .markdown-draft-banner span { display: block; }
+.markdown-draft-banner strong { font-family: "Newsreader Variable", serif; font-size: 1rem; }
+.markdown-draft-banner span { margin-top: .1rem; color: color-mix(in oklch, var(--rust), var(--ink) 45%); font-size: .62rem; }
+.markdown-draft-banner > div:last-child { display: flex; gap: .35rem; }
+.markdown-draft-banner button { min-height: 2rem; padding: 0 .65rem; border: 1px solid color-mix(in oklch, var(--rust), transparent 45%); background: transparent; color: var(--rust); font-size: .65rem; }
+.markdown-draft-banner button:first-child { background: var(--rust); color: var(--paper); }
+.markdown-status { min-height: 2.5rem; padding: .5rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--ink); background: var(--secondary); color: var(--muted-ink); font: .58rem "IBM Plex Mono", monospace; }
+.markdown-status strong { color: var(--ink); font-weight: 600; }
 .markdown-privacy { min-height: 4.25rem; padding: .8rem 1rem; display: flex; align-items: center; gap: .6rem; color: var(--pine); background: var(--pine-soft); font-size: .67rem; }
 .markdown-privacy svg { width: .9rem; }
 .markdown-privacy strong { color: var(--pine); }
 .markdown-privacy span { color: color-mix(in oklch, var(--pine), var(--ink) 45%); }
+.markdown-settings-scrim { position: fixed; inset: 0; z-index: 45; border: 0; background: oklch(0.12 0.02 60 / 42%); }
+.markdown-settings { position: fixed; inset: 0 0 0 auto; z-index: 50; width: min(23rem, 92vw); display: flex; flex-direction: column; border-left: 1px solid var(--ink); background: var(--paper); box-shadow: -16px 0 40px oklch(0.12 0.02 50 / 20%); }
+.markdown-settings-heading { min-height: 4.5rem; padding: .8rem 1rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--ink); }
+.markdown-settings-heading strong, .markdown-settings-heading small { display: block; }
+.markdown-settings-heading strong { font-family: "Newsreader Variable", serif; font-size: 1.15rem; }
+.markdown-settings-heading small { color: var(--muted-ink); font-size: .6rem; }
+.markdown-settings-heading button, .markdown-dialog-heading > button { width: 2rem; height: 2rem; display: grid; place-items: center; border: 0; background: transparent; color: var(--muted-ink); }
+.markdown-settings-heading svg, .markdown-dialog-heading > button svg { width: 1rem; }
+.markdown-settings-scroll { flex: 1; padding: 1rem; overflow-y: auto; }
+.markdown-settings fieldset { margin: 0 0 1.6rem; padding: 0; border: 0; }
+.markdown-settings legend { width: 100%; margin-bottom: .8rem; padding-bottom: .45rem; border-bottom: 1px solid var(--rule); color: var(--rust); font-size: .58rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.markdown-setting-field { display: block; margin-bottom: .85rem; }
+.markdown-setting-field > span { display: block; margin-bottom: .35rem; color: var(--muted-ink); font-size: .62rem; }
+.markdown-setting-field select, .markdown-setting-field > input, .markdown-margin-grid input { width: 100%; height: 2.2rem; padding: 0 .55rem; border: 1px solid var(--rule); border-radius: 0; outline: 0; background: var(--panel); color: var(--ink); font-size: .68rem; }
+.markdown-setting-field select + input { margin-top: .35rem; }
+.markdown-setting-field input:focus, .markdown-setting-field select:focus { border-color: var(--rust); box-shadow: 0 0 0 1px var(--rust); }
+.markdown-range-row { display: grid; grid-template-columns: 1fr 3.5rem; align-items: center; gap: .6rem; }
+.markdown-range-row input { width: 100%; accent-color: var(--rust); }
+.markdown-range-row output { text-align: right; font: .62rem "IBM Plex Mono", monospace; }
+.markdown-presets, .markdown-segments { display: flex; margin-bottom: .85rem; border: 1px solid var(--rule); background: var(--panel); }
+.markdown-presets button, .markdown-segments button { min-height: 2rem; flex: 1; border: 0; background: transparent; color: var(--muted-ink); font-size: .62rem; text-transform: capitalize; }
+.markdown-presets button + button, .markdown-segments button + button { border-left: 1px solid var(--rule); }
+.markdown-presets button:hover, .markdown-segments button:hover { background: var(--accent); color: var(--ink); }
+.markdown-segments button.active { background: var(--ink); color: var(--paper); }
+.markdown-segments.four button { font-size: .56rem; }
+.markdown-margin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .2rem .6rem; }
+.markdown-toggle { min-height: 2.3rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: var(--ink); font-size: .68rem; }
+.markdown-toggle input { accent-color: var(--rust); }
+.markdown-dialog-scrim { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 1rem; background: oklch(0.12 0.02 60 / 55%); }
+.markdown-dialog { width: min(34rem, 100%); max-height: 90svh; overflow: auto; border: 1px solid var(--ink); background: var(--paper); box-shadow: 0 20px 60px oklch(0.12 0.02 50 / 30%); }
+.markdown-dialog-heading { min-height: 4.5rem; padding: .8rem 1rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--ink); }
+.markdown-dialog-heading > div { display: flex; align-items: center; gap: .7rem; }
+.markdown-dialog-heading > div > svg { width: 1.1rem; color: var(--rust); }
+.markdown-dialog-heading h2 { margin: 0; font-family: "Newsreader Variable", serif; font-size: 1.2rem; }
+.markdown-dialog-heading p { margin: .15rem 0 0; color: var(--muted-ink); font-size: .6rem; }
+.markdown-dialog-body { padding: 1rem; }
+.markdown-dialog-body > label:not(.markdown-toggle) { display: block; margin-bottom: .9rem; }
+.markdown-dialog-body > label > span { display: flex; justify-content: space-between; margin-bottom: .35rem; color: var(--muted-ink); font-size: .62rem; }
+.markdown-dialog-body > label small { font-family: "IBM Plex Mono", monospace; }
+.markdown-dialog-body input[type="text"], .markdown-dialog-body > label:not(.markdown-toggle) input { width: 100%; height: 2.3rem; padding: 0 .6rem; border: 1px solid var(--rule); border-radius: 0; background: var(--panel); color: var(--ink); font-size: .7rem; }
+.markdown-dialog-note { margin: 1rem 0 0; padding: .75rem; background: var(--pine-soft); color: color-mix(in oklch, var(--pine), var(--ink) 45%); font-size: .65rem; line-height: 1.5; }
+.markdown-dialog-actions { padding: .75rem 1rem; display: flex; justify-content: flex-end; gap: .5rem; border-top: 1px solid var(--rule); }
+.markdown-dialog-actions button { min-height: 2.2rem; padding: 0 .75rem; display: flex; align-items: center; gap: .4rem; border: 1px solid var(--rule); background: transparent; color: var(--ink); font-size: .68rem; }
+.markdown-dialog-actions button.primary { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+.markdown-dialog-actions svg { width: .85rem; }
+.markdown-toast { position: fixed; z-index: 80; right: 1.25rem; bottom: 1.25rem; max-width: min(22rem, calc(100vw - 2rem)); padding: .8rem 1rem; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); font-size: .7rem; box-shadow: 0 10px 30px oklch(0.12 0.02 50 / 22%); }
 
 .sql-workspace { border-top: 1px solid var(--ink); }
 .sql-toolbar { min-height: 4.5rem; padding: .65rem 1rem; display: grid; grid-template-columns: repeat(3, minmax(8rem, 11rem)) 1fr; align-items: end; gap: .8rem; border-bottom: 1px solid var(--ink); background: color-mix(in oklch, var(--secondary), transparent 30%); }
@@ -706,6 +784,22 @@ h1 em { color: var(--rust); font-weight: 350; }
 .no-changes p { margin: 0; }
 .no-changes strong { color: var(--ink); }
 
+@container (max-width: 980px) {
+  .markdown-document-bar { grid-template-columns: minmax(0, 1fr) auto; }
+  .markdown-document-bar > label:first-child { grid-column: 1 / -1; }
+  .markdown-document-actions { flex-wrap: wrap; }
+  .markdown-toolbar { align-items: flex-start; flex-wrap: wrap; }
+  .markdown-file-actions { order: 3; width: 100%; overflow-x: auto; }
+  .markdown-view-switch { margin-left: auto; }
+}
+
+@container (max-width: 620px) {
+  .markdown-stats, .markdown-document-actions { grid-column: 1 / -1; }
+  .markdown-document-actions { justify-content: flex-start; }
+  .markdown-view-switch { width: 100%; margin-left: 0; }
+  .markdown-view-switch button { flex: 1; justify-content: center; }
+}
+
 @media (max-width: 1100px) {
   .tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tool-card.featured { grid-column: span 2; }
@@ -769,14 +863,19 @@ h1 em { color: var(--rust); font-weight: 350; }
   .markdown-stats { grid-column: 1; grid-row: 2; }
   .paper-select { grid-column: 2; grid-row: 2; }
   .markdown-document-bar > button { grid-column: 1 / -1; }
+  .markdown-document-actions { grid-column: 1 / -1; justify-content: flex-start; flex-wrap: wrap; }
   .markdown-toolbar { align-items: flex-start; flex-wrap: wrap; }
-  .markdown-file-actions { margin-left: auto; }
+  .markdown-file-actions { width: 100%; margin-left: 0; overflow-x: auto; }
   .markdown-view-switch { width: 100%; margin-left: 0; }
   .markdown-view-switch button { flex: 1; justify-content: center; }
-  .markdown-editor-grid { grid-template-columns: 1fr; }
+  .markdown-editor-grid { grid-template-columns: 1fr !important; }
   .markdown-editor-panel { border-right: 0; border-bottom: 1px solid var(--ink); }
-  .markdown-editor-panel textarea, .paper-stage { height: 38rem; }
+  .markdown-codemirror, .paper-stage { height: 38rem; }
+  .markdown-divider { display: none; }
   .view-write .markdown-editor-panel { border-bottom: 0; }
+  .markdown-draft-banner { align-items: flex-start; flex-direction: column; }
+  .markdown-status { align-items: flex-start; flex-direction: column; gap: .25rem; }
+  .markdown-status span:nth-child(2) { display: none; }
   .markdown-privacy { align-items: flex-start; flex-wrap: wrap; }
   .markdown-privacy span { width: 100%; padding-left: 1.5rem; }
   .sql-toolbar { grid-template-columns: 1fr 1fr; }

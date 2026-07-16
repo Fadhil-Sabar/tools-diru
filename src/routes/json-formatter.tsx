@@ -12,9 +12,7 @@ import {
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-
-type JsonMode = 'format' | 'minify'
-type JsonIndent = '2' | '4' | 'tab'
+import { formatJson, type JsonIndent, type JsonMode } from '@/lib/json'
 
 const SAMPLE_JSON = `{
   "project": "Toolbox",
@@ -30,33 +28,6 @@ const SAMPLE_JSON = `{
   }
 }`
 
-function inspectJson(value: unknown, level = 1): { keys: number; values: number; depth: number } {
-  if (Array.isArray(value)) {
-    return value.reduce((total, item) => {
-      const child = inspectJson(item, level + 1)
-      return { keys: total.keys + child.keys, values: total.values + child.values, depth: Math.max(total.depth, child.depth) }
-    }, { keys: 0, values: 0, depth: level })
-  }
-  if (value !== null && typeof value === 'object') {
-    return Object.entries(value).reduce((total, [, item]) => {
-      const child = inspectJson(item, level + 1)
-      return { keys: total.keys + 1 + child.keys, values: total.values + child.values, depth: Math.max(total.depth, child.depth) }
-    }, { keys: 0, values: 0, depth: level })
-  }
-  return { keys: 0, values: 1, depth: level }
-}
-
-function describeJsonError(error: unknown, input: string) {
-  const message = error instanceof Error ? error.message : 'Invalid JSON'
-  const position = message.match(/position\s+(\d+)/i)?.[1]
-  if (!position) return message
-  const offset = Number(position)
-  const beforeError = input.slice(0, offset)
-  const line = beforeError.split('\n').length
-  const column = offset - beforeError.lastIndexOf('\n')
-  return `${message} · line ${line}, column ${column}`
-}
-
 export default function JsonFormatter() {
   const [input, setInput] = useState(() => localStorage.getItem('json-formatter-input') ?? SAMPLE_JSON)
   const [mode, setMode] = useState<JsonMode>('format')
@@ -64,16 +35,7 @@ export default function JsonFormatter() {
   const [copied, setCopied] = useState(false)
   const fileInput = useRef<HTMLInputElement>(null)
 
-  const result = useMemo(() => {
-    if (!input.trim()) return { output: '', error: '', stats: null }
-    try {
-      const parsed: unknown = JSON.parse(input)
-      const spacing = mode === 'minify' ? undefined : indent === 'tab' ? '\t' : Number(indent)
-      return { output: JSON.stringify(parsed, null, spacing), error: '', stats: inspectJson(parsed) }
-    } catch (error) {
-      return { output: '', error: describeJsonError(error, input), stats: null }
-    }
-  }, [indent, input, mode])
+  const result = useMemo(() => formatJson(input, mode, indent), [indent, input, mode])
 
   useEffect(() => {
     localStorage.setItem('json-formatter-input', input)
@@ -105,11 +67,6 @@ export default function JsonFormatter() {
 
   return (
     <div className="json-tool">
-      <section className="tool-intro">
-        <div><p className="eyebrow">Developer utility 02</p><h1>Make JSON <em>readable.</em></h1></div>
-        <p>Format, validate, or compress JSON instantly. Nothing is uploaded, and your latest input remains available on this device.</p>
-      </section>
-
       <section className="json-workspace">
         <div className="json-toolbar">
           <div className="format-switch" aria-label="Output format">

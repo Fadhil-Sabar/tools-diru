@@ -49,5 +49,12 @@ function ToolPreview({ id }: { id: Tool['id'] }) {
   if (id === 'json') return <div className="preview-json"><code>{`{`}</code><code>  "name": "Toolbox",</code><code>  "private": true</code><code>{`}`}</code></div>
   if (id === 'timestamp') return <div className="preview-time"><strong>09:41</strong><span>Thursday · 16 Jul 2026</span></div>
   if (id === 'text') return <div className="preview-text"><span>Words<strong>248</strong></span><span>Lines<strong>32</strong></span><span>Chars<strong>1,892</strong></span></div>
-  return <div className="preview-uuid"><code>7d444840</code><code>-9dc0-</code><code>11d1</code></div>
+  if (id === 'uuid') return <div className="preview-uuid"><code>7d444840</code><code>-9dc0-</code><code>11d1</code></div>
+  if (id === 'markdown') return <div className="preview-markdown"><div><strong>A small document</strong><span /><span /><span /></div><code># Write<br /><br />**Preview**<br />then export.</code></div>
+  if (id === 'sql') return <div className="preview-sql"><code><b>SELECT</b> u.name,</code><code>  COUNT(o.id)</code><code><b>FROM</b> users u</code><code><b>LEFT JOIN</b> orders o</code></div>
+  if (id === 'csv') return <div className="preview-data"><div><b>{`{ }`}</b><span>JSON</span></div><i>↔</i><div><b>▦</b><span>CSV</span></div></div>
+  if (id === 'color') return <div className="preview-colors"><span style={{ background: '#C45132' }} /><span style={{ background: '#D68A42' }} /><span style={{ background: '#4F8069' }} /><code>#C45132</code></div>
+  if (id === 'image-color') return <div className="preview-image-color"><div /><span style={{ background: '#D7A45B' }} /><span style={{ background: '#4D6C78' }} /><span style={{ background: '#A94D3D' }} /></div>
+  if (id === 'palette') return <div className="preview-palette"><span style={{ background: '#6B4C9A' }} /><span style={{ background: '#3B82A0' }} /><span style={{ background: '#48A87D' }} /><span style={{ background: '#D4A843' }} /><span style={{ background: '#C75D52' }} /></div>
+  return <div className="preview-image-color"><div /><span style={{ background: '#D7A45B' }} /><span style={{ background: '#4D6C78' }} /><span style={{ background: '#A94D3D' }} /></div>
 }

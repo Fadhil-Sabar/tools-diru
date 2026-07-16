@@ -1,22 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Calendar, Check, CircleAlert, Clipboard, RotateCw } from 'lucide-react'
-
-type TimestampUnit = 'seconds' | 'milliseconds'
-
-function toLocalDateTimeValue(date: Date) {
-  const pad = (value: number) => value.toString().padStart(2, '0')
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
-}
-
-function relativeTime(date: Date, now: number) {
-  const seconds = Math.round((date.getTime() - now) / 1000)
-  const absolute = Math.abs(seconds)
-  const formatter = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' })
-  if (absolute < 60) return formatter.format(seconds, 'second')
-  if (absolute < 3600) return formatter.format(Math.round(seconds / 60), 'minute')
-  if (absolute < 86400) return formatter.format(Math.round(seconds / 3600), 'hour')
-  return formatter.format(Math.round(seconds / 86400), 'day')
-}
+import { parseTimestamp, relativeTime, timestampInUnit, toLocalDateTimeValue, type TimestampUnit } from '@/lib/timestamp'
 
 export default function Timestamp() {
   const [unit, setUnit] = useState<TimestampUnit>('seconds')
@@ -31,28 +15,22 @@ export default function Timestamp() {
 
   useEffect(() => localStorage.setItem('timestamp-value', timestamp), [timestamp])
 
-  const date = useMemo(() => {
-    if (!timestamp.trim()) return null
-    const numeric = Number(timestamp)
-    if (!Number.isFinite(numeric)) return null
-    const parsed = new Date(unit === 'seconds' ? numeric * 1000 : numeric)
-    return Number.isFinite(parsed.getTime()) ? parsed : null
-  }, [timestamp, unit])
+  const date = useMemo(() => parseTimestamp(timestamp, unit), [timestamp, unit])
 
   function useNow() {
     const now = Date.now()
-    setTimestamp((unit === 'seconds' ? Math.floor(now / 1000) : now).toString())
+    setTimestamp(timestampInUnit(new Date(now), unit).toString())
   }
 
   function changeUnit(nextUnit: TimestampUnit) {
-    if (date) setTimestamp((nextUnit === 'seconds' ? Math.floor(date.getTime() / 1000) : date.getTime()).toString())
+    if (date) setTimestamp(timestampInUnit(date, nextUnit).toString())
     setUnit(nextUnit)
   }
 
   function changeLocalDate(value: string) {
     const nextDate = new Date(value)
     if (!Number.isFinite(nextDate.getTime())) return
-    setTimestamp((unit === 'seconds' ? Math.floor(nextDate.getTime() / 1000) : nextDate.getTime()).toString())
+    setTimestamp(timestampInUnit(nextDate, unit).toString())
   }
 
   async function copyValue(label: string, value: string) {
@@ -70,11 +48,6 @@ export default function Timestamp() {
 
   return (
     <div className="timestamp-tool">
-      <section className="tool-intro">
-        <div><p className="eyebrow">Developer utility 03</p><h1>Translate <em>time.</em></h1></div>
-        <p>Move between Unix timestamps and human-readable dates without guessing units or time zones.</p>
-      </section>
-
       <section className="time-workspace">
         <button className="live-clock" onClick={useNow}>
           <span><i /> Current Unix time</span>

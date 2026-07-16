@@ -10,6 +10,12 @@ import JsonFormatter from './routes/json-formatter.tsx'
 import Timestamp from './routes/timestamp.tsx'
 import TextInspector from './routes/text-inspector.tsx'
 import UuidGenerator from './routes/uuid-generator.tsx'
+import MarkdownPdf from './routes/markdown-pdf.tsx'
+import SqlFormatter from './routes/sql-formatter.tsx'
+import JsonCsv from './routes/json-csv.tsx'
+import ColorConverter from './routes/color-converter.tsx'
+import ImageColorPicker from './routes/image-color-picker.tsx'
+import ColorPalette from './routes/color-palette.tsx'
 
 import './index.css'
 
@@ -51,6 +57,42 @@ const uuidRoute = createRoute({
   component: UuidGenerator,
 })
 
+const markdownRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/markdown-pdf',
+  component: MarkdownPdf,
+})
+
+const sqlRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/sql-formatter',
+  component: SqlFormatter,
+})
+
+const jsonCsvRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/json-csv',
+  component: JsonCsv,
+})
+
+const colorConverterRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/color-converter',
+  component: ColorConverter,
+})
+
+const imageColorPickerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/image-color-picker',
+  component: ImageColorPicker,
+})
+
+const colorPaletteRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/color-palette',
+  component: ColorPalette,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   diffRoute,
@@ -58,6 +100,12 @@ const routeTree = rootRoute.addChildren([
   timestampRoute,
   textRoute,
   uuidRoute,
+  markdownRoute,
+  sqlRoute,
+  jsonCsvRoute,
+  colorConverterRoute,
+  imageColorPickerRoute,
+  colorPaletteRoute,
 ])
 
 const router = createRouter({ routeTree })

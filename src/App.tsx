@@ -53,7 +53,7 @@ function App() {
           <Link to="/" className={`nav-item home-link ${location.pathname === '/' ? 'active' : ''}`} onClick={closeSidebar}>
             <Home /><span>Overview</span>
           </Link>
-          {(['Developer', 'Text'] as const).map((category) => (
+          {(['Developer', 'Data', 'Design', 'Text'] as const).map((category) => (
             <div className="nav-group" key={category}>
               <p>{category}</p>
               {visibleTools.filter((tool) => tool.category === category).map((tool) => {

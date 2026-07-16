@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { diffStats, toLines } from '@/lib/diff'
 
 type ViewMode = 'unified' | 'split'
 type DiffKind = 'context' | 'addition' | 'deletion'
@@ -26,11 +27,6 @@ const SAMPLE_AFTER = `export function greet(name: string) {
   return message;
 }`
 
-function toLines(value: string) {
-  const withoutFinalNewline = value.endsWith('\n') ? value.slice(0, -1) : value
-  return withoutFinalNewline ? withoutFinalNewline.split('\n') : []
-}
-
 export default function DiffViewer() {
   const [before, setBefore] = useState(() => localStorage.getItem('diff-viewer-before') ?? SAMPLE_BEFORE)
   const [after, setAfter] = useState(() => localStorage.getItem('diff-viewer-after') ?? SAMPLE_AFTER)
@@ -40,12 +36,7 @@ export default function DiffViewer() {
   const beforeInput = useRef<HTMLInputElement>(null)
   const afterInput = useRef<HTMLInputElement>(null)
   const changes = useMemo(() => diffLines(before, after, { ignoreWhitespace }), [after, before, ignoreWhitespace])
-  const stats = useMemo(() => changes.reduce((total, change) => {
-    const count = toLines(change.value).length
-    if (change.added) total.additions += count
-    if (change.removed) total.deletions += count
-    return total
-  }, { additions: 0, deletions: 0 }), [changes])
+  const stats = useMemo(() => diffStats(before, after, ignoreWhitespace), [after, before, ignoreWhitespace])
   const patch = useMemo(() => createTwoFilesPatch('before', 'after', before, after, '', ''), [after, before])
 
   useEffect(() => {
@@ -79,7 +70,6 @@ export default function DiffViewer() {
 
   return (
     <div className="diff-tool">
-      <section className="tool-intro"><div><p className="eyebrow">Text utility 01</p><h1>See what <em>changed.</em></h1></div><p>Compare two versions without uploading a thing. Paste text or open files; your work stays on this device.</p></section>
       <section className="workspace" aria-label="Diff inputs">
         <div className="input-grid">
           {([

@@ -10,33 +10,20 @@ import {
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-
-type UuidFormat = 'standard' | 'uppercase' | 'compact' | 'braces'
-type Separator = 'newline' | 'comma' | 'space'
-
-function generateUuids(count: number) {
-  return Array.from({ length: count }, () => crypto.randomUUID())
-}
-
-function formatUuid(uuid: string, format: UuidFormat) {
-  if (format === 'uppercase') return uuid.toUpperCase()
-  if (format === 'compact') return uuid.replaceAll('-', '')
-  if (format === 'braces') return `{${uuid}}`
-  return uuid
-}
+import { clampUuidCount, formatUuid, generateUuids, joinUuids, type UuidFormat, type UuidSeparator } from '@/lib/uuid'
 
 export default function UuidGenerator() {
   const [count, setCount] = useState(5)
   const [format, setFormat] = useState<UuidFormat>('standard')
-  const [separator, setSeparator] = useState<Separator>('newline')
+  const [separator, setSeparator] = useState<UuidSeparator>('newline')
   const [uuids, setUuids] = useState(() => generateUuids(5))
   const [copied, setCopied] = useState('')
 
   const formatted = useMemo(() => uuids.map((uuid) => formatUuid(uuid, format)), [format, uuids])
-  const joined = formatted.join(separator === 'newline' ? '\n' : separator === 'comma' ? ', ' : ' ')
+  const joined = joinUuids(formatted, separator)
 
   function regenerate(nextCount = count) {
-    const safeCount = Math.min(100, Math.max(1, nextCount))
+    const safeCount = clampUuidCount(nextCount)
     setCount(safeCount)
     setUuids(generateUuids(safeCount))
   }
@@ -58,11 +45,6 @@ export default function UuidGenerator() {
 
   return (
     <div className="uuid-tool">
-      <section className="tool-intro">
-        <div><p className="eyebrow">Developer utility 05</p><h1>Create unique <em>IDs.</em></h1></div>
-        <p>Generate cryptographically secure UUID v4 identifiers in useful batches, ready to paste into code, data, or tests.</p>
-      </section>
-
       <section className="uuid-workspace">
         <div className="uuid-controls">
           <div className="uuid-control-group count-control">
@@ -83,7 +65,7 @@ export default function UuidGenerator() {
           </label>
           <label className="uuid-control-group">
             <span>Copy separator</span>
-            <select value={separator} onChange={(event) => setSeparator(event.target.value as Separator)}>
+              <select value={separator} onChange={(event) => setSeparator(event.target.value as UuidSeparator)}>
               <option value="newline">New line</option>
               <option value="comma">Comma</option>
               <option value="space">Space</option>

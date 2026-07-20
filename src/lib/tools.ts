@@ -1,7 +1,7 @@
-import { Braces, Clock3, Database, FileCode2, FileDown, FileText, Hash, Image, Palette, SwatchBook, Table2 } from 'lucide-react'
+import { Braces, Clock3, Database, FileCode2, FileDown, FileText, Hash, Image, Languages, Palette, SwatchBook, Table2 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
-export type ToolId = 'home' | 'diff' | 'json' | 'timestamp' | 'text' | 'uuid' | 'markdown' | 'sql' | 'csv' | 'color' | 'image-color' | 'palette'
+export type ToolId = 'home' | 'diff' | 'json' | 'timestamp' | 'text' | 'uuid' | 'markdown' | 'sql' | 'csv' | 'color' | 'image-color' | 'palette' | 'japanese-quiz'
 
 export interface Tool {
   id: Exclude<ToolId, 'home'>
@@ -19,6 +19,7 @@ export const TOOLS: Tool[] = [
   { id: 'json', name: 'JSON formatter', description: 'Format, validate, and minify JSON.', category: 'Developer', icon: Braces, available: true, accent: 'pine', path: '/json-formatter' },
   { id: 'timestamp', name: 'Timestamp', description: 'Convert Unix time and local dates.', category: 'Developer', icon: Clock3, available: true, accent: 'ochre', path: '/timestamp' },
   { id: 'text', name: 'Text inspector', description: 'Count words, lines, and characters.', category: 'Text', icon: FileText, available: true, accent: 'blue', path: '/text-inspector' },
+  { id: 'japanese-quiz', name: 'Japanese Vocabulary', description: 'Practice Japanese job vocabulary with quick quizzes.', category: 'Text', icon: Languages, available: true, accent: 'rust', path: '/japanese-quiz' },
   { id: 'uuid', name: 'UUID generator', description: 'Create secure identifiers in batches.', category: 'Developer', icon: Hash, available: true, accent: 'violet', path: '/uuid-generator' },
   { id: 'markdown', name: 'Markdown to PDF', description: 'Write, preview, and export polished PDFs.', category: 'Text', icon: FileDown, available: true, accent: 'ochre', path: '/markdown-pdf' },
   { id: 'sql', name: 'SQL formatter', description: 'Format queries for your database dialect.', category: 'Developer', icon: Database, available: true, accent: 'blue', path: '/sql-formatter' },

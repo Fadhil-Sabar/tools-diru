@@ -16,6 +16,7 @@ import ColorConverter from './routes/color-converter.tsx'
 import ImageColorPicker from './routes/image-color-picker.tsx'
 import ColorPalette from './routes/color-palette.tsx'
 import MarkdownPdfRoute from './routes/markdown-pdf-lazy.tsx'
+import JapaneseQuiz from './routes/japanese-quiz.tsx'
 
 import './index.css'
 
@@ -93,6 +94,12 @@ const colorPaletteRoute = createRoute({
   component: ColorPalette,
 })
 
+const japaneseQuizRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/japanese-quiz',
+  component: JapaneseQuiz,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   diffRoute,
@@ -106,6 +113,7 @@ const routeTree = rootRoute.addChildren([
   colorConverterRoute,
   imageColorPickerRoute,
   colorPaletteRoute,
+  japaneseQuizRoute,
 ])
 
 const router = createRouter({ routeTree })

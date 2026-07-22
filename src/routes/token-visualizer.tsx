@@ -144,7 +144,7 @@ export default function TokenVisualizer() {
   }
 
   function updateLength(value: number) {
-    setLength(Math.min(1200, Math.max(20, value)))
+    setLength(Math.min(10000, Math.max(20, value)))
     reset()
   }
 
@@ -184,8 +184,8 @@ export default function TokenVisualizer() {
 
           <label className="token-range-control">
             <span><span><FileText /> Text length</span><output>{length} tokens</output></span>
-            <input type="range" min="20" max="1200" step="10" value={length} onChange={(event) => updateLength(Number(event.target.value))} />
-            <small><span>20</span><span>1,200</span></small>
+            <input type="range" min="20" max="10000" step="10" value={length} onChange={(event) => updateLength(Number(event.target.value))} />
+            <small><span>20</span><span>10,000</span></small>
           </label>
 
           <label className="token-source">

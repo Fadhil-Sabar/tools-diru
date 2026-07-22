@@ -17,6 +17,7 @@ import ImageColorPicker from './routes/image-color-picker.tsx'
 import ColorPalette from './routes/color-palette.tsx'
 import MarkdownPdfRoute from './routes/markdown-pdf-lazy.tsx'
 import JapaneseQuiz from './routes/japanese-quiz.tsx'
+import TokenVisualizer from './routes/token-visualizer.tsx'
 
 import './index.css'
 
@@ -100,6 +101,12 @@ const japaneseQuizRoute = createRoute({
   component: JapaneseQuiz,
 })
 
+const tokenVisualizerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/token-visualizer',
+  component: TokenVisualizer,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   diffRoute,
@@ -114,6 +121,7 @@ const routeTree = rootRoute.addChildren([
   imageColorPickerRoute,
   colorPaletteRoute,
   japaneseQuizRoute,
+  tokenVisualizerRoute,
 ])
 
 const router = createRouter({ routeTree })

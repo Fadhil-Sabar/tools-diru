@@ -44,5 +44,6 @@ Tool category list in sidebar (`src/App.tsx:56`): `['Developer', 'Data', 'Design
 | `/color-converter` | `color-converter.tsx` | `src/lib/color.ts` |
 | `/image-color-picker` | `image-color-picker.tsx` | `src/lib/color.ts` |
 | `/color-palette` | `color-palette.tsx` | `src/lib/color.ts` (seeded PRNG, no new deps) |
+| `/token-visualizer` | `token-visualizer.tsx` | none |
 
 All tools are client-only — data stays in localStorage or in-memory.

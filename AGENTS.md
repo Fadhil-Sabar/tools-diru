@@ -43,6 +43,7 @@ Tool category list in sidebar (`src/App.tsx:56`): `['Developer', 'Data', 'Design
 | `/json-csv` | `json-csv.tsx` | `papaparse` |
 | `/color-converter` | `color-converter.tsx` | `src/lib/color.ts` |
 | `/image-color-picker` | `image-color-picker.tsx` | `src/lib/color.ts` |
+| `/background-remover` | `background-remover.tsx` | `@imgly/background-removal` (local AI processing) |
 | `/color-palette` | `color-palette.tsx` | `src/lib/color.ts` (seeded PRNG, no new deps) |
 | `/token-visualizer` | `token-visualizer.tsx` | none |
 

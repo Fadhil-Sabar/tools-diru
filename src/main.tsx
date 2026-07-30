@@ -14,6 +14,7 @@ import SqlFormatter from './routes/sql-formatter.tsx'
 import JsonCsv from './routes/json-csv.tsx'
 import ColorConverter from './routes/color-converter.tsx'
 import ImageColorPicker from './routes/image-color-picker.tsx'
+import BackgroundRemover from './routes/background-remover.tsx'
 import ColorPalette from './routes/color-palette.tsx'
 import MarkdownPdfRoute from './routes/markdown-pdf-lazy.tsx'
 import JapaneseQuiz from './routes/japanese-quiz.tsx'
@@ -89,6 +90,12 @@ const imageColorPickerRoute = createRoute({
   component: ImageColorPicker,
 })
 
+const backgroundRemoverRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/background-remover',
+  component: BackgroundRemover,
+})
+
 const colorPaletteRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/color-palette',
@@ -119,6 +126,7 @@ const routeTree = rootRoute.addChildren([
   jsonCsvRoute,
   colorConverterRoute,
   imageColorPickerRoute,
+  backgroundRemoverRoute,
   colorPaletteRoute,
   japaneseQuizRoute,
   tokenVisualizerRoute,

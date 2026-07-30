@@ -1,7 +1,7 @@
-import { Braces, Clock3, Database, FileCode2, FileDown, FileText, Gauge, Hash, Image, Languages, Palette, SwatchBook, Table2 } from 'lucide-react'
+import { Braces, Clock3, Database, Eraser, FileCode2, FileDown, FileText, Gauge, Hash, Image, Languages, Palette, SwatchBook, Table2 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
-export type ToolId = 'home' | 'diff' | 'json' | 'timestamp' | 'text' | 'uuid' | 'markdown' | 'sql' | 'csv' | 'color' | 'image-color' | 'palette' | 'japanese-quiz' | 'token-visualizer'
+export type ToolId = 'home' | 'diff' | 'json' | 'timestamp' | 'text' | 'uuid' | 'markdown' | 'sql' | 'csv' | 'color' | 'image-color' | 'background-remover' | 'palette' | 'japanese-quiz' | 'token-visualizer'
 
 export interface Tool {
   id: Exclude<ToolId, 'home'>
@@ -27,6 +27,7 @@ export const TOOLS: Tool[] = [
   { id: 'csv', name: 'JSON ↔ CSV', description: 'Convert structured data in either direction.', category: 'Data', icon: Table2, available: true, accent: 'pine', path: '/json-csv' },
   { id: 'color', name: 'Color converter', description: 'Convert HEX, RGB, HSL, and CMYK colors.', category: 'Design', icon: Palette, available: true, accent: 'rust', path: '/color-converter' },
   { id: 'image-color', name: 'Image color picker', description: 'Sample pixels and palettes from images.', category: 'Design', icon: Image, available: true, accent: 'violet', path: '/image-color-picker' },
+  { id: 'background-remover', name: 'Background remover', description: 'Create transparent cutouts locally with AI.', category: 'Design', icon: Eraser, available: true, accent: 'pine', path: '/background-remover' },
   { id: 'palette', name: 'Color palette', description: 'Generate random harmonious palettes.', category: 'Design', icon: SwatchBook, available: true, accent: 'violet', path: '/color-palette' },
 ]
 

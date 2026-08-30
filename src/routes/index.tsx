@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, QrCode } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 
 import type { Tool } from '@/lib/tools'
@@ -56,5 +56,6 @@ function ToolPreview({ id }: { id: Tool['id'] }) {
   if (id === 'color') return <div className="preview-colors"><span style={{ background: '#C45132' }} /><span style={{ background: '#D68A42' }} /><span style={{ background: '#4F8069' }} /><code>#C45132</code></div>
   if (id === 'image-color') return <div className="preview-image-color"><div /><span style={{ background: '#D7A45B' }} /><span style={{ background: '#4D6C78' }} /><span style={{ background: '#A94D3D' }} /></div>
   if (id === 'palette') return <div className="preview-palette"><span style={{ background: '#6B4C9A' }} /><span style={{ background: '#3B82A0' }} /><span style={{ background: '#48A87D' }} /><span style={{ background: '#D4A843' }} /><span style={{ background: '#C75D52' }} /></div>
+  if (id === 'qr-code') return <div className="preview-qr"><QrCode /><span>Matrix 2D</span></div>
   return <div className="preview-image-color"><div /><span style={{ background: '#D7A45B' }} /><span style={{ background: '#4D6C78' }} /><span style={{ background: '#A94D3D' }} /></div>
 }

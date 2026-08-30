@@ -19,6 +19,7 @@ import ColorPalette from './routes/color-palette.tsx'
 import MarkdownPdfRoute from './routes/markdown-pdf-lazy.tsx'
 import JapaneseQuiz from './routes/japanese-quiz.tsx'
 import TokenVisualizer from './routes/token-visualizer.tsx'
+import QrCodeRoute from './routes/qr-code.tsx'
 
 import './index.css'
 
@@ -114,6 +115,12 @@ const tokenVisualizerRoute = createRoute({
   component: TokenVisualizer,
 })
 
+const qrCodeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/qr-code',
+  component: QrCodeRoute,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   diffRoute,
@@ -124,6 +131,7 @@ const routeTree = rootRoute.addChildren([
   markdownRoute,
   sqlRoute,
   jsonCsvRoute,
+  qrCodeRoute,
   colorConverterRoute,
   imageColorPickerRoute,
   backgroundRemoverRoute,

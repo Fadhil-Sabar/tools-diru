@@ -46,5 +46,7 @@ Tool category list in sidebar (`src/App.tsx:56`): `['Developer', 'Data', 'Design
 | `/background-remover` | `background-remover.tsx` | `@imgly/background-removal` (local AI processing) |
 | `/color-palette` | `color-palette.tsx` | `src/lib/color.ts` (seeded PRNG, no new deps) |
 | `/token-visualizer` | `token-visualizer.tsx` | none |
+| `/japanese-quiz` | `japanese-quiz.tsx` | none |
+| `/qr-code` | `qr-code.tsx` | `qrcode` (npm) |
 
 All tools are client-only — data stays in localStorage or in-memory.

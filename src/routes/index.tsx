@@ -45,6 +45,7 @@ function ToolCard({ tool, featured, onOpen }: { tool: Tool; featured: boolean; o
 }
 
 function ToolPreview({ id }: { id: Tool['id'] }) {
+  if (id === 'agent-skills') return <div className="preview-skills"><code>---</code><code>name: reviewer</code><code>description: AI skill</code><code>---</code></div>
   if (id === 'diff') return <div className="preview-diff"><span>12</span><code>  const status = 'idle'</code><span>12</span><code>+ const status = 'ready'</code><span>13</span><code>+ return status</code></div>
   if (id === 'json') return <div className="preview-json"><code>{`{`}</code><code>  "name": "Toolbox",</code><code>  "private": true</code><code>{`}`}</code></div>
   if (id === 'timestamp') return <div className="preview-time"><strong>09:41</strong><span>Thursday · 16 Jul 2026</span></div>

@@ -20,6 +20,7 @@ import MarkdownPdfRoute from './routes/markdown-pdf-lazy.tsx'
 import JapaneseQuiz from './routes/japanese-quiz.tsx'
 import TokenVisualizer from './routes/token-visualizer.tsx'
 import QrCodeRoute from './routes/qr-code.tsx'
+import AgentSkillsRoute from './routes/agent-skills.tsx'
 
 import './index.css'
 
@@ -121,9 +122,16 @@ const qrCodeRoute = createRoute({
   component: QrCodeRoute,
 })
 
+const agentSkillsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/agent-skills',
+  component: AgentSkillsRoute,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   diffRoute,
+  agentSkillsRoute,
   jsonRoute,
   timestampRoute,
   textRoute,

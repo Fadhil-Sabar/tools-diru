@@ -48,5 +48,6 @@ Tool category list in sidebar (`src/App.tsx:56`): `['Developer', 'Data', 'Design
 | `/token-visualizer` | `token-visualizer.tsx` | none |
 | `/japanese-quiz` | `japanese-quiz.tsx` | none |
 | `/qr-code` | `qr-code.tsx` | `qrcode` (npm) |
+| `/agent-skills` | `agent-skills.tsx` | `src/lib/skills.ts` |
 
 All tools are client-only — data stays in localStorage or in-memory.

@@ -132,6 +132,9 @@ export default function QrCodeRoute() {
   const [exportWidth, setExportWidth] = useState<number>(() => Number(localStorage.getItem('qr-export-width')) || 512)
   const [showWifiPassword, setShowWifiPassword] = useState(false)
 
+  const [showPlaceholder, setShowPlaceholder] = useState(() => localStorage.getItem('qr-show-placeholder') === 'true')
+  const [customPlaceholder, setCustomPlaceholder] = useState(() => localStorage.getItem('qr-custom-placeholder') ?? '')
+
   const [svgMarkup, setSvgMarkup] = useState('')
   const [dataUrl, setDataUrl] = useState('')
   const [copied, setCopied] = useState<string>('')
@@ -153,6 +156,8 @@ export default function QrCodeRoute() {
   useEffect(() => localStorage.setItem('qr-bg', bgColor), [bgColor])
   useEffect(() => localStorage.setItem('qr-trans', String(transparentBg)), [transparentBg])
   useEffect(() => localStorage.setItem('qr-export-width', String(exportWidth)), [exportWidth])
+  useEffect(() => localStorage.setItem('qr-show-placeholder', String(showPlaceholder)), [showPlaceholder])
+  useEffect(() => localStorage.setItem('qr-custom-placeholder', customPlaceholder), [customPlaceholder])
 
   // Compute the current active payload
   const currentPayload = useMemo(() => {
@@ -178,6 +183,37 @@ export default function QrCodeRoute() {
     }
   }, [mode, urlInput, textInput, wifiData, emailData, phoneInput, smsData, vcardData, geoData])
 
+  const defaultPlaceholderText = useMemo(() => {
+    switch (mode) {
+      case 'url':
+        return urlInput.trim()
+      case 'text':
+        return textInput.trim()
+      case 'wifi':
+        return wifiData.ssid.trim() ? `Wi-Fi: ${wifiData.ssid.trim()}` : ''
+      case 'email':
+        return emailData.to.trim()
+      case 'phone':
+        return phoneInput.trim()
+      case 'sms':
+        return smsData.phone.trim() ? `SMS: ${smsData.phone.trim()}` : ''
+      case 'vcard': {
+        const name = [vcardData.firstName, vcardData.lastName].filter(Boolean).join(' ')
+        return name || vcardData.organization || vcardData.url || ''
+      }
+      case 'geo':
+        return geoData.latitude && geoData.longitude
+          ? `${geoData.latitude}, ${geoData.longitude}`
+          : ''
+      default:
+        return currentPayload
+    }
+  }, [mode, urlInput, textInput, wifiData, emailData, phoneInput, smsData, vcardData, geoData, currentPayload])
+
+  const activePlaceholderText = useMemo(() => {
+    return customPlaceholder.trim() || defaultPlaceholderText
+  }, [customPlaceholder, defaultPlaceholderText])
+
   const qrOptions: QrOptions = useMemo(() => ({
     ecc,
     margin,
@@ -185,7 +221,9 @@ export default function QrCodeRoute() {
     bgColor,
     transparentBg,
     width: exportWidth,
-  }), [ecc, margin, fgColor, bgColor, transparentBg, exportWidth])
+    showPlaceholder,
+    placeholderText: activePlaceholderText,
+  }), [ecc, margin, fgColor, bgColor, transparentBg, exportWidth, showPlaceholder, activePlaceholderText])
 
   const inspection = useMemo(() => {
     return inspectQr(currentPayload, ecc)
@@ -266,15 +304,15 @@ export default function QrCodeRoute() {
 
   function downloadJpeg() {
     if (!dataUrl) return
-    const canvas = document.createElement('canvas')
-    canvas.width = exportWidth
-    canvas.height = exportWidth
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
     const img = new Image()
     img.crossOrigin = 'anonymous'
     img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.naturalWidth || exportWidth
+      canvas.height = img.naturalHeight || exportWidth
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+
       ctx.fillStyle = transparentBg ? '#ffffff' : bgColor
       ctx.fillRect(0, 0, canvas.width, canvas.height)
       ctx.drawImage(img, 0, 0)
@@ -677,6 +715,8 @@ export default function QrCodeRoute() {
                     setFgColor(DEFAULT_QR_OPTIONS.fgColor)
                     setBgColor(DEFAULT_QR_OPTIONS.bgColor)
                     setTransparentBg(DEFAULT_QR_OPTIONS.transparentBg)
+                    setShowPlaceholder(false)
+                    setCustomPlaceholder('')
                   }}
                   title="Reset styling to defaults"
                 >
@@ -813,13 +853,54 @@ export default function QrCodeRoute() {
                 <div className="qr-heading-title">
                   <QrIcon className="text-pine" />
                   <h2>Real-time Output</h2>
+                  {inspection && (
+                    <span className="qr-meta-tag">
+                      {inspection.byteCount} bytes · v{inspection.version}
+                    </span>
+                  )}
                 </div>
-                {inspection && (
-                  <span className="qr-meta-tag">
-                    {inspection.byteCount} bytes · v{inspection.version}
-                  </span>
-                )}
+                <div className="qr-heading-actions">
+                  <label className="qr-toggle-label">
+                    <span>Placeholder</span>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={showPlaceholder}
+                      onClick={() => setShowPlaceholder((v) => !v)}
+                      className={`qr-switch ${showPlaceholder ? 'active' : ''}`}
+                      title="Show text / URL below QR code"
+                    >
+                      <span className="qr-switch-thumb" />
+                    </button>
+                  </label>
+                </div>
               </div>
+
+              {/* Collapsible custom placeholder text bar */}
+              {showPlaceholder && (
+                <div className="qr-placeholder-subbar">
+                  <label>
+                    <span>Label:</span>
+                    <input
+                      type="text"
+                      value={customPlaceholder}
+                      onChange={(e) => setCustomPlaceholder(e.target.value)}
+                      placeholder={defaultPlaceholderText ? `Default: ${defaultPlaceholderText}` : 'Enter custom label...'}
+                      aria-label="Placeholder text below QR"
+                    />
+                  </label>
+                  {customPlaceholder && (
+                    <button
+                      type="button"
+                      className="qr-subbar-reset"
+                      onClick={() => setCustomPlaceholder('')}
+                      title="Reset to default text / URL"
+                    >
+                      Reset
+                    </button>
+                  )}
+                </div>
+              )}
 
               {/* QR Code Canvas/SVG Display Box */}
               <div className="qr-preview-stage">
@@ -828,7 +909,10 @@ export default function QrCodeRoute() {
                     <p>{generationError}</p>
                   </div>
                 ) : svgMarkup ? (
-                  <div className={`qr-display-box ${transparentBg ? 'is-transparent' : ''}`}>
+                  <div
+                    className={`qr-display-box ${transparentBg ? 'is-transparent' : ''}`}
+                    style={{ backgroundColor: transparentBg ? undefined : bgColor }}
+                  >
                     <div
                       className="qr-svg-wrapper"
                       dangerouslySetInnerHTML={{ __html: svgMarkup }}

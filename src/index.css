@@ -994,14 +994,30 @@ h1 em { color: var(--rust); font-weight: 350; }
 .qr-button-radio-group button:hover:not(.active) { background: var(--accent); color: var(--ink); }
 
 .qr-preview-stage { padding: 2rem 1.5rem; display: grid; place-items: center; min-height: 20rem; background: color-mix(in oklch, var(--secondary), transparent 40%); border-bottom: 1px solid var(--rule); }
-.qr-display-box { padding: 1.25rem; border: 1px solid var(--rule); box-shadow: 0 8px 24px oklch(0.1 0.02 50 / 8%); background: var(--panel); display: flex; align-items: center; justify-content: center; }
+.qr-display-box { padding: 1.25rem; border: 1px solid var(--rule); box-shadow: 0 8px 24px oklch(0.1 0.02 50 / 8%); background: var(--panel); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: background-color .15s ease; }
 .qr-display-box.is-transparent { background-color: var(--panel) !important; background-image: linear-gradient(45deg, var(--rule) 25%, transparent 25%), linear-gradient(-45deg, var(--rule) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, var(--rule) 75%), linear-gradient(-45deg, transparent 75%, var(--rule) 75%) !important; background-position: 0 0, 0 9px, 9px -9px, -9px 0 !important; background-size: 18px 18px !important; }
-.qr-svg-wrapper { display: block; width: 14rem; height: 14rem; }
-.qr-svg-wrapper svg { display: block; width: 100%; height: 100%; }
+.qr-svg-wrapper { display: block; width: 14rem; max-width: 100%; height: auto; }
+.qr-svg-wrapper svg { display: block; width: 100%; height: auto; }
 .qr-placeholder-box { display: flex; flex-direction: column; align-items: center; gap: .6rem; color: var(--muted-ink); text-align: center; }
 .qr-placeholder-box svg { width: 2.5rem; height: 2.5rem; color: var(--pine); opacity: .7; }
 .qr-placeholder-box p { margin: 0; font-size: .75rem; }
 .qr-error-box { padding: 1rem; color: var(--rust); background: var(--rust-soft); font-size: .75rem; border: 1px solid var(--rust); }
+.qr-heading-actions { display: flex; align-items: center; gap: .75rem; }
+.qr-toggle-label { display: flex; align-items: center; gap: .55rem; font-size: .68rem; font-weight: 550; color: var(--ink); cursor: pointer; user-select: none; }
+.qr-toggle-label > span { font-size: .68rem; color: var(--muted-ink); font-weight: 500; letter-spacing: .02em; }
+.qr-switch { position: relative; width: 2.1rem; height: 1.2rem; border-radius: 9999px; background: color-mix(in oklch, var(--rule), var(--ink) 15%); border: 1px solid var(--rule); padding: 0; cursor: pointer; transition: all .15s ease; display: inline-flex; align-items: center; }
+.qr-switch.active { background: var(--pine); border-color: var(--pine); }
+.qr-switch-thumb { position: absolute; left: 2px; width: .9rem; height: .9rem; border-radius: 50%; background: #ffffff; box-shadow: 0 1px 3px oklch(0 0 0 / 25%); transition: transform .15s ease; }
+.qr-switch.active .qr-switch-thumb { transform: translateX(.9rem); }
+.qr-switch:focus-visible { outline: 2px solid var(--pine); outline-offset: 2px; }
+
+.qr-placeholder-subbar { display: flex; align-items: center; gap: .6rem; padding: .5rem 1.25rem; background: color-mix(in oklch, var(--secondary), transparent 30%); border-bottom: 1px solid var(--rule); }
+.qr-placeholder-subbar label { display: flex; align-items: center; gap: .5rem; flex: 1; margin: 0; }
+.qr-placeholder-subbar label > span { font-size: .62rem; font-weight: 650; text-transform: uppercase; letter-spacing: .06em; color: var(--muted-ink); white-space: nowrap; }
+.qr-placeholder-subbar input { flex: 1; height: 1.9rem; padding: 0 .6rem; border: 1px solid var(--rule); background: var(--paper); color: var(--ink); font-family: "IBM Plex Mono", monospace; font-size: .7rem; outline: 0; }
+.qr-placeholder-subbar input:focus { border-color: var(--pine); }
+.qr-subbar-reset { font-size: .62rem; font-family: "IBM Plex Mono", monospace; padding: .25rem .5rem; border: 1px solid var(--rule); background: var(--paper); color: var(--muted-ink); cursor: pointer; white-space: nowrap; }
+.qr-subbar-reset:hover { border-color: var(--ink); color: var(--ink); }
 
 .qr-metrics-bar { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--rule); background: var(--panel); }
 .qr-metrics-bar > div { padding: .65rem .85rem; border-right: 1px solid var(--rule); }

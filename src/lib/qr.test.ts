@@ -93,4 +93,38 @@ describe('qr helper', () => {
     const dataUrl = await generateQrDataUrl('https://example.com', DEFAULT_QR_OPTIONS, 256)
     expect(dataUrl.startsWith('data:image/png;base64,')).toBe(true)
   })
+
+  it('generates SVG with placeholder text below the QR code', async () => {
+    const rawSvg = await generateQrSvg('https://example.com', {
+      ...DEFAULT_QR_OPTIONS,
+      showPlaceholder: false,
+    })
+    const rawMatch = rawSvg.match(/viewBox="0 0 (\d+) (\d+)"/)
+    const rawH = parseInt(rawMatch?.[2] ?? '0', 10)
+
+    const placeholderSvg = await generateQrSvg('https://example.com', {
+      ...DEFAULT_QR_OPTIONS,
+      showPlaceholder: true,
+      placeholderText: 'https://example.com',
+    })
+
+    expect(placeholderSvg).toContain('<text')
+    expect(placeholderSvg).toContain('https://example.com')
+    expect(placeholderSvg).toContain('text-anchor="middle"')
+
+    const placeholderMatch = placeholderSvg.match(/viewBox="0 0 (\d+) (\d+)"/)
+    const placeholderH = parseInt(placeholderMatch?.[2] ?? '0', 10)
+    expect(placeholderH).toBeGreaterThan(rawH)
+  })
+
+  it('properly escapes special characters in SVG placeholder', async () => {
+    const placeholderSvg = await generateQrSvg('https://example.com', {
+      ...DEFAULT_QR_OPTIONS,
+      showPlaceholder: true,
+      placeholderText: 'Ben & Jerry\'s <Ice Cream> "Special"',
+    })
+
+    expect(placeholderSvg).toContain('Ben &amp; Jerry&apos;s &lt;Ice Cream&gt; &quot;Special&quot;')
+    expect(placeholderSvg).not.toContain('<Ice Cream>')
+  })
 })

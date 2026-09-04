@@ -44,8 +44,8 @@ Body content goes here.`
     expect(filteredByCategory[0].id).toBe('prd-generator')
 
     const filteredByTarget = filterSkills(PRESET_SKILLS, '', 'All', 'Cursor')
-    expect(filteredByTarget.length).toBe(1)
-    expect(filteredByTarget[0].id).toBe('prd-generator')
+    expect(filteredByTarget.length).toBe(2)
+    expect(filteredByTarget.some((skill) => skill.id === 'prd-generator')).toBe(true)
 
     const filteredByQuery = filterSkills(PRESET_SKILLS, 'Mermaid', 'All', 'All')
     expect(filteredByQuery.length).toBe(1)

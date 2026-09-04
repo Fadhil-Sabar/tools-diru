@@ -28,6 +28,7 @@ const CATEGORIES: Array<'All' | SkillCategory> = [
   'Docs',
   'Architecture',
   'Engineering',
+  'Design',
 ]
 
 const TARGETS: Array<'All' | SkillTarget> = [

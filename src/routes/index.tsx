@@ -8,6 +8,14 @@ export default function Dashboard() {
   const navigate = useNavigate()
   const today = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date())
 
+  function openTool(tool: Tool) {
+    if (tool.externalUrl) {
+      window.open(tool.externalUrl, '_blank', 'noopener,noreferrer')
+      return
+    }
+    navigate({ to: tool.path })
+  }
+
   return (
     <div className="dashboard">
       <section className="dashboard-intro">
@@ -21,7 +29,7 @@ export default function Dashboard() {
       </section>
 
       <div className="tool-grid">
-        {TOOLS.map((tool, index) => <ToolCard key={tool.id} tool={tool} featured={index === 0} onOpen={(tool) => navigate({ to: tool.path })} />)}
+        {TOOLS.map((tool, index) => <ToolCard key={tool.id} tool={tool} featured={index === 0} onOpen={openTool} />)}
       </div>
     </div>
   )
@@ -45,6 +53,7 @@ function ToolCard({ tool, featured, onOpen }: { tool: Tool; featured: boolean; o
 }
 
 function ToolPreview({ id }: { id: Tool['id'] }) {
+  if (id === 'mimin-webui') return <div className="preview-skills"><code>MIMIN</code><code>project: active</code><code>agent: ready</code><code>tools: connected</code></div>
   if (id === 'agent-skills') return <div className="preview-skills"><code>---</code><code>name: reviewer</code><code>description: AI skill</code><code>---</code></div>
   if (id === 'diff') return <div className="preview-diff"><span>12</span><code>  const status = 'idle'</code><span>12</span><code>+ const status = 'ready'</code><span>13</span><code>+ return status</code></div>
   if (id === 'json') return <div className="preview-json"><code>{`{`}</code><code>  "name": "Toolbox",</code><code>  "private": true</code><code>{`}`}</code></div>

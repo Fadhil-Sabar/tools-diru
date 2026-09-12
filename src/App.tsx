@@ -58,6 +58,13 @@ function App() {
               <p>{category}</p>
               {visibleTools.filter((tool) => tool.category === category).map((tool) => {
                 const Icon = tool.icon
+                if (tool.externalUrl) {
+                  return (
+                    <a href={tool.externalUrl} target="_blank" rel="noreferrer" className="nav-item" onClick={closeSidebar} key={tool.id}>
+                      <Icon /><span>{tool.name}</span>
+                    </a>
+                  )
+                }
                 return (
                   <Link to={tool.path} className={`nav-item ${location.pathname === tool.path ? 'active' : ''}`} onClick={closeSidebar} key={tool.id}>
                     <Icon /><span>{tool.name}</span>{!tool.available && <small>Soon</small>}

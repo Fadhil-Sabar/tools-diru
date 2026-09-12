@@ -1,7 +1,7 @@
-import { Bot, Braces, Clock3, Database, Eraser, FileCode2, FileDown, FileText, Gauge, Hash, Image, Languages, Palette, QrCode, SwatchBook, Table2 } from 'lucide-react'
+import { Bot, Braces, Clock3, Database, Eraser, FileCode2, FileDown, FileText, Gauge, Hash, Image, Languages, MessageSquareCode, Palette, QrCode, SwatchBook, Table2 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
-export type ToolId = 'home' | 'diff' | 'json' | 'timestamp' | 'text' | 'uuid' | 'markdown' | 'sql' | 'csv' | 'color' | 'image-color' | 'background-remover' | 'palette' | 'japanese-quiz' | 'token-visualizer' | 'qr-code' | 'agent-skills'
+export type ToolId = 'home' | 'diff' | 'json' | 'timestamp' | 'text' | 'uuid' | 'markdown' | 'sql' | 'csv' | 'color' | 'image-color' | 'background-remover' | 'palette' | 'japanese-quiz' | 'token-visualizer' | 'qr-code' | 'agent-skills' | 'mimin-webui'
 
 export interface Tool {
   id: Exclude<ToolId, 'home'>
@@ -12,11 +12,13 @@ export interface Tool {
   available: boolean
   accent: string
   path: string
+  externalUrl?: string
 }
 
 export const TOOLS: Tool[] = [
   { id: 'diff', name: 'Diff viewer', description: 'Compare text and inspect every change.', category: 'Developer', icon: FileCode2, available: true, accent: 'rust', path: '/diff-viewer' },
   { id: 'agent-skills', name: 'Agent skills', description: 'Browse, customize, and copy curated SKILL.md templates for AI agents.', category: 'Developer', icon: Bot, available: true, accent: 'pine', path: '/agent-skills' },
+  { id: 'mimin-webui', name: 'Mimin WebUI', description: 'A minimal workspace for project-based AI agents, persistent conversations, knowledge, models, and tools.', category: 'Developer', icon: MessageSquareCode, available: true, accent: 'violet', path: '/mimin-webui', externalUrl: 'https://github.com/Fadhil-Sabar/mimin-webui' },
   { id: 'json', name: 'JSON formatter', description: 'Format, validate, and minify JSON.', category: 'Developer', icon: Braces, available: true, accent: 'pine', path: '/json-formatter' },
   { id: 'timestamp', name: 'Timestamp', description: 'Convert Unix time and local dates.', category: 'Developer', icon: Clock3, available: true, accent: 'ochre', path: '/timestamp' },
   { id: 'token-visualizer', name: 'Token speed', description: 'Visualize streaming text at any token rate.', category: 'Developer', icon: Gauge, available: true, accent: 'rust', path: '/token-visualizer' },
